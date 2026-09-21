@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zora-trading-bot"
+version = "0.3.0"
+description = "ZORA — a multi-timeframe, multi-factor, multi-symbol crypto paper/live trading bot with an auto-learning brain, a multi-AI expert panel, and Telegram control, built to run on a phone via Termux."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "ZORA project" }]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
+dependencies = [
+    "ccxt>=4.3.0",
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+zora = "bot:main"
+
+# Flat layout (no package directory) — list each top-level module explicitly
+# so `pip install -e .` and the `zora` console script both work without
+# restructuring the project into a src/ package.
+[tool.setuptools]
+py-modules = [
+    "bot", "config", "data", "indicators", "strategy", "risk", "brain",
+    "multi_ai", "news_feed", "telegram_control", "execution", "db",
+    "logging_setup", "patterns",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = [
+    "E501",  # line length is handled case-by-case; long f-strings/log lines are common here
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["F401"]  # test modules sometimes import fixtures only for their side effects
